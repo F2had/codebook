@@ -4,7 +4,7 @@ import { Cell } from "../../Types/index";
 import { ActionType } from "../Actions/Types";
 import { Action } from "../Actions";
 
-interface CellsState {
+export interface CellsState {
   loading: boolean;
   error: string | null;
   order: string[];
@@ -51,7 +51,10 @@ const CellsReducer = produce(
         const newCell: Cell = {
           id: newId,
           type,
-          content: type === 'code' ? `// you can use the show function to show js/jsx in a cell \n //show(<div>Hello World</div>)` : '',
+          content:
+            type === "code"
+              ? `// you can use the show function to show js/jsx in a cell \n //show(<div>Hello World</div>)`
+              : "",
         };
         state.data[newId] = newCell;
         const index = state.order.indexOf(
@@ -64,6 +67,31 @@ const CellsReducer = produce(
           state.order.splice(index + 1, 0, newId);
         }
         return state;
+
+      case ActionType.FETCH_CELLS:
+        state.loading = true;
+        state.error = null;
+
+        return state;
+      case ActionType.FETCH_CELLS_COMPLETE:
+        state.loading = false;
+
+        state.data = action.payload.reduce(
+          (acc, cell) => ({ ...acc, [cell.id]: cell }),
+          {} as CellsState["data"]
+        );
+        state.order = action.payload.map((cell) => cell.id);
+        return state;
+
+      case ActionType.FETCH_CELLS_ERROR:
+        state.loading = false;
+        state.error = action.payload;
+        return state;
+
+      case ActionType.SAVE_ERROR_CELL:
+        state.error = action.payload;
+        return state;
+
       default:
         return state;
     }

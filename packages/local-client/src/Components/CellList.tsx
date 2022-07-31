@@ -1,6 +1,7 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useEffect } from "react";
 
 import { useTypedSelector } from "../Hooks/UsedTypedSelector";
+import { useActions } from "../Hooks/useActions";
 import AddCell from "./AddCell";
 import CellListItem from "./CellListItem";
 
@@ -12,6 +13,16 @@ const CellList: React.FC = () => {
     }
     return [];
   });
+
+  const { saveCells, fetchCells } = useActions();
+
+  useEffect(() => {
+    fetchCells();
+  }, []);
+
+  useEffect(() => {
+    saveCells();
+  }, [JSON.stringify(cells)]);
 
   const renderCellList = cells.map((cell) => {
     return (
