@@ -37,7 +37,7 @@ const CodeCell: React.FC<CodeCellProps> = ({ cell }) => {
       import _React from "react";
       import _ReactDOM from "react-dom";
       const root = document.getElementById("root");
-      var show = (value) => {
+      var show = (value = '') => {
         if (typeof value === 'object') {
           if (value.$$typeof && value.props) {
             _ReactDOM.render(value, root);
