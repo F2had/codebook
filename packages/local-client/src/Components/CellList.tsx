@@ -6,6 +6,7 @@ import AddCell from "./AddCell";
 import CellListItem from "./CellListItem";
 
 const CellList: React.FC = () => {
+  let timer: NodeJS.Timeout;
   const cells = useTypedSelector((state) => {
     if (state.cells) {
       const { data, order } = state.cells;
@@ -21,7 +22,18 @@ const CellList: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    saveCells();
+    if (timer) {
+      clearTimeout(timer);
+    }
+    timer = setTimeout(() => {
+      saveCells();
+    }, 1000);
+
+    return () => {
+      if (timer) {
+        clearTimeout(timer);
+      }
+    };
   }, [JSON.stringify(cells)]);
 
   const renderCellList = cells.map((cell) => {
